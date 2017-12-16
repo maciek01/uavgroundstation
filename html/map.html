@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Ground Station - tracking drone1</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      
+      
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      
+      
+      #actions-panel {
+        position: absolute;
+        top: 10px;
+        left: 25%;
+        z-index: 5;
+        background-color: #fff;
+        padding: 5px;
+        border: 1px solid #999;
+        text-align: center;
+        font-family: 'Roboto','sans-serif';
+        line-height: 30px;
+        padding-left: 10px;
+      }
+
+      #uav-data {
+        position: absolute;
+        top: 25%;
+        left: 90%;
+        z-index: 5;
+        background-color: #fff;
+        padding: 5px;
+        border: 1px solid #999;
+        text-align: left;
+        font-family: 'Roboto','sans-serif';
+        line-height: 30px;
+        padding-left: 10px;
+      }
+      
+      #data-header {
+        background-color: #fff;
+        text-align: left;
+        font-family: 'Roboto','sans-serif';
+      }  
+      
+      #data-item {
+        background-color: #fff;
+        text-align: left;
+        font-family: 'Roboto','sans-serif';
+      }  
+      
+      #uav-commands {
+        position: absolute;
+        top: 25%;
+        left: 1%;
+        z-index: 5;
+        background-color: #fff;
+        padding: 5px;
+        border: 1px solid #999;
+        text-align: left;
+        font-family: 'Roboto','sans-serif';
+        line-height: 30px;
+        padding-left: 10px;
+      }  
+     
+      #command-list {
+        background-color: #fff;
+        text-align: left;
+        font-family: 'Roboto','sans-serif';
+        padding: 5px;
+        height:120px;
+        overflow:auto;
+      }
+      
+      #command-list-item {
+        background-color: #fff;
+        text-align: left;
+        font-family: 'Roboto','sans-serif';
+      }
+      
+    </style>
+  </head>
+  <body>
+  <!-- Add an input button to initiate the toggle method on the overlay. -->
+    <div id="actions-panel">
+      <div>
+        <label>Select vehicle</label>
+  	  <select id="drones"></select>
+  	  <label>Select command</label>
+        <input type="button" value="ARM" onclick="arm();"></input>
+        <input type="button" value="DISARM" onclick="disarm();"></input>
+        <input type="button" value="TAKEOFF" onclick="takeoff();"></input>
+        <input type="button" value="LAND" onclick="land();"></input>
+        <input type="button" value="RETURN HOME" onclick="returnToHome();"></input>
+        <input type="button" value="PAUSE" onclick="pause();"></input>
+        <input type="button" value="RESUME" onclick="resume();"></input>
+        <input type="button" value="POSITION" onclick="position();"></input>
+        <input type="button" value="LOITER" onclick="loiter();"></input>
+        <input type="button" value="MANUAL" onclick="manual();"></input>
+        <input type="button" value="REHOME" onclick="rehome();"></input>
+      </div>
+      <div>
+        <label>Operating Alt:</label>
+        <input id="spinnerAlt" value="20" readonly/>
+        <input type="button" value="-1" onclick="decAlt1();"></input>
+        <input type="button" value="-10" onclick="decAlt10();"></input>
+        <input type="button" value="+10" onclick="incAlt10();"></input>
+        <input type="button" value="+1" onclick="incAlt1();"></input>
+      </div>
+      <div>
+        <label>Operating Speed:</label>
+        <input id="spinnerSpeed" value="10" readonly/>
+        <input type="button" value="-1" onclick="decSpeed1();"></input>
+        <input type="button" value="+1" onclick="incSpeed1();"></input>
+      </div>      
+    </div>
+
+    <div id="uav-data">
+      <div id="data-header">
+        <label id="unit">--</label>
+        <label id="armed">--</label>
+      </div>
+      <div id="data-item">
+        <label>MODE:</label>
+        <label id="uavMode">--</label>
+      </div>
+      <div id="data-item">
+        <label>HEADING:</label>
+        <label id="heading">--</label>
+      </div>
+      <div id="data-item">
+        <label>SPEED:</label>
+        <label id="gps-speed">--</label>
+      </div>
+      <div id="data-item">
+        <label>ALT BARO:</label>
+        <label id="alt-baro">--</label>
+      </div>
+      <div id="data-item">
+        <label>ALT GPS:</label>
+        <label id="alt-gps">--</label>
+      </div>
+      <div id="data-item">
+        <label>GPS SATS:</label>
+        <label id="gps-sats">--</label>
+      </div>
+      <div id="data-item">
+        <label>GPS LOCK:</label>
+        <label id="gps-lock">--</label>
+      </div>
+      <div id="data-item">
+        <label>BAT:</label>
+        <label id="bat">--</label>
+      </div>
+      <div id="data-item">
+        <label>CURR:</label>
+        <label id="curr">--</label>
+      </div>
+    </div>
+    
+    
+    <div id="uav-commands">
+      <label>BUFFERED COMMANDS </label><input type="button" value="CLEAR" onclick="clearQueue();"></input><BR />
+      <div id="command-list"></div>
+    </div>
+    
+
+
+    <div id="map"></div>
+    
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAmtuMeDnxKNPTzDfkLQs5aFkeFI5PP0sY"></script>
+    <script src="gmaps.js"></script>
+    
+    <!-- script src="https://code.jquery.com/jquery-1.12.4.js"></script -->
+    <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    
+    <script src="groundstation.js"></script>
+    
+    
+    
+    <!-- script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAmtuMeDnxKNPTzDfkLQs5aFkeFI5PP0sY&callback=initMapWithRemoteCoords">
+    </script -->
+  </body>
+</html>
+
+
+
+
+
+
