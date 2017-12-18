@@ -319,10 +319,10 @@ function updateInfo(data) {
 		$("#heading").html(data.heartbeat.heading);
 		$("#spinnerAlt").val(data.heartbeat.operatingAlt);
 		$("#spinnerSpeed").val(data.heartbeat.operatingSpeed);
-		$("#gps-speed").html(data.heartbeat.gpsSpeed.toFixed(2) + " m/s");
-		$("#alt-baro").html(data.heartbeat.baroAlt.toFixed(2) + " m");
-		//$("#alt-gps").html(data.heartbeat.gpsAlt.toFixed(2) + " m");
-		$("#alt-gps").html(data.heartbeat.gpsAltRel.toFixed(2) + " m");
+		$("#gps-speed").html((data.heartbeat.gpsSpeed ? data.heartbeat.gpsSpeed.toFixed(2) : "--") + " m/s");
+		$("#alt-baro").html((data.heartbeat.baroAlt ? data.heartbeat.baroAlt.toFixed(2) : "--") + " m");
+		//$("#alt-gps").html((data.heartbeat.gpsAlt ? data.heartbeat.gpsAlt.toFixed(2) : "--") + " m");
+		$("#alt-gps").html((data.heartbeat.gpsAltRel ? data.heartbeat.gpsAltRel.toFixed(2) : "--") + " m");
 		$("#gps-sats").html(data.heartbeat.gpsNumSats);
 		$("#gps-lock").html(data.heartbeat.gpsLock);
 		$("#bat").html(
