@@ -277,27 +277,32 @@ function updateMarkers() {
 		//draw home
 		if (homeMarker == null) {
 
-			homeMarker = mainMap.addMarker({
-				lat : data.heartbeat.homeLat,
-				lng : data.heartbeat.homeLon,
-				title : "home-"+data.heartbeat.unitId,
-				label : "home-"+data.heartbeat.unitId,
-				icon : {
-					path : google.maps.SymbolPath.CIRCLE,
-					scale : 10,
-					strokeColor : "red"
-					//rotation : data.heartbeat.heading
-				},
-				click : function(e) {
-					alert('You clicked in this marker');
-				}
-			});
+			if (data.heartbeat.homeLat && data.heartbeat.homeLon) {
+
+				homeMarker = mainMap.addMarker({
+					lat : data.heartbeat.homeLat,
+					lng : data.heartbeat.homeLon,
+					title : "home-"+data.heartbeat.unitId,
+					label : "home-"+data.heartbeat.unitId,
+					icon : {
+						path : google.maps.SymbolPath.CIRCLE,
+						scale : 10,
+						strokeColor : "red"
+						//rotation : data.heartbeat.heading
+					},
+					click : function(e) {
+						alert('You clicked in this marker');
+					}
+				});
+			}
 
 		} else {
-			homeMarker.setPosition({
-				lat : data.heartbeat.homeLat,
-				lng : data.heartbeat.homeLon
-			});
+			if (data.heartbeat.homeLat && data.heartbeat.homeLon) {
+				homeMarker.setPosition({
+					lat : data.heartbeat.homeLat,
+					lng : data.heartbeat.homeLon
+				});
+			}
 			homeMarker.setIcon({
 				path : google.maps.SymbolPath.CIRCLE,
 				scale : 10,
