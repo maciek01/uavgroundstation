@@ -334,6 +334,8 @@ function updateInfo(data) {
 				data.heartbeat.currVolts + "V " + data.heartbeat.currVoltsLevel
 						+ "%");
 		$("#curr").html(data.heartbeat.currMah * 1000 + " mAh");
+		$("#modemstatus").html(data.heartbeat.modemstatus);
+		$("#modemsignal").html(data.heartbeat.modemsignal);
 
 		//update command list
 		listActions(currentUnit, function(commands) {
