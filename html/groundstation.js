@@ -331,9 +331,9 @@ function updateInfo(data) {
 		$("#gps-sats").html(data.heartbeat.gpsNumSats);
 		$("#gps-lock").html(data.heartbeat.gpsLock);
 		$("#bat").html(
-				data.heartbeat.currVolts + "V " + data.heartbeat.currVoltsLevel
+				data.heartbeat.currVolts + " V " + data.heartbeat.currVoltsLevel
 						+ "%");
-		$("#curr").html(data.heartbeat.currMah * 1000 + " mAh");
+		$("#curr").html(data.heartbeat.currMah + " A");
 		$("#modemstatus").html(data.heartbeat.modemstatus);
 		$("#modemsignal").html(data.heartbeat.modemsignal);
 
