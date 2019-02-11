@@ -326,6 +326,7 @@ function updateInfo(data) {
 		$("#spinnerSpeed").val(data.heartbeat.operatingSpeed);
 		$("#gps-speed").html((data.heartbeat.gpsSpeed ? data.heartbeat.gpsSpeed.toFixed(2) : "--") + " m/s");
 		$("#alt-baro").html((data.heartbeat.baroAlt ? data.heartbeat.baroAlt.toFixed(2) : "--") + " m");
+		$("#alt-lidar").html((data.heartbeat.lidarAlt ? data.heartbeat.lidarAlt.toFixed(2) : "--") + " m");
 		//$("#alt-gps").html((data.heartbeat.gpsAlt ? data.heartbeat.gpsAlt.toFixed(2) : "--") + " m");
 		$("#alt-gps").html((data.heartbeat.gpsAltRel ? data.heartbeat.gpsAltRel.toFixed(2) : "--") + " m");
 		$("#gps-sats").html(data.heartbeat.gpsNumSats);
