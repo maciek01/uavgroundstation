@@ -333,7 +333,8 @@ function updateInfo(data) {
 		$("#bat").html(
 				data.heartbeat.currVolts + " V " + data.heartbeat.currVoltsLevel
 						+ "%");
-		$("#curr").html(data.heartbeat.currMah + " A");
+		$("#curr").html(data.heartbeat.currA + " A");
+		$("#curr_tot").html(data.heartbeat.currTotmAh + " mAh");
 		$("#modemstatus").html(data.heartbeat.modemstatus);
 		$("#modemsignal").html(data.heartbeat.modemsignal);
 
