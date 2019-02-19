@@ -252,7 +252,7 @@ function updateMarkers() {
 				title : data.heartbeat.unitId,
 				label : data.heartbeat.unitId,
 				icon : {
-					path : google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+					path : typeof data.heartbeat.heading !== 'undefined' ? google.maps.SymbolPath.FORWARD_CLOSED_ARROW : google.maps.SymbolPath.CIRCLE,
 					scale : 10,
 					strokeColor : "red",
 					rotation : data.heartbeat.heading
@@ -268,7 +268,7 @@ function updateMarkers() {
 				lng : data.heartbeat.gpsLon
 			});
 			marker.setIcon({
-				path : google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+				path : typeof data.heartbeat.heading !== 'undefined' ? google.maps.SymbolPath.FORWARD_CLOSED_ARROW : google.maps.SymbolPath.CIRCLE,
 				scale : 10,
 				strokeColor : "red",
 				rotation : data.heartbeat.heading
