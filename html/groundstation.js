@@ -332,10 +332,11 @@ function updateInfo(data) {
 		$("#gps-sats").html(data.heartbeat.gpsNumSats);
 		$("#gps-lock").html(data.heartbeat.gpsLock);
 		$("#bat").html(
-				data.heartbeat.currVolts + " V " + data.heartbeat.currVoltsLevel
+				(data.heartbeat.currVolts ? data.heartbeat.currVolts : "--") + " V " + (data.heartbeat.currVoltsLevel ?
+				data.heartbeat.currVoltsLevel : "--")
 						+ "%");
-		$("#curr").html(data.heartbeat.currA + " A");
-		$("#curr_tot").html(data.heartbeat.currTotmAh + " mAh");
+		$("#curr").html((data.heartbeat.currA ? data.heartbeat.currA : "--") + " A");
+		$("#curr_tot").html((data.heartbeat.currTotmAh ? data.heartbeat.currTotmAh : "--") + " mAh");
 		$("#modemstatus").html(data.heartbeat.modemstatus);
 		$("#modemsignal").html(data.heartbeat.modemsignal);
 
