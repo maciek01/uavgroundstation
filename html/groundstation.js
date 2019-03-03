@@ -127,6 +127,7 @@ function initMapWithRemoteCoords() {
 		if (currentUnit != "") {
 			//getDroneLocation(initMap, currentUnit);
 			getAllDrones(initMap);
+			document.title = "Ground Station - tracking " + currentUnit;
 		}
 	});
 }
