@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Ground Station - tracking drone1</title>
+    <title id="gsTitle">Ground Station - not tracking</title>
     <meta name="viewport" content="initial-scale=1.0">
     <meta http-equiv="Access-Control-Allow-Origin" content="*">
     
@@ -99,7 +99,7 @@
     <div id="actions-panel">
       <div>
         <label>Select vehicle</label>
-  	  <select id="drones"></select>
+  	  <select id="drones" onChange="onUnitChange()"></select>
   	  <label>Select command</label>
         <input type="button" value="ARM" onclick="arm();"></input>
         <input type="button" value="DISARM" onclick="disarm();"></input>

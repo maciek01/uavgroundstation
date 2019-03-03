@@ -7,11 +7,14 @@ var SERVER_URL = "/uavserver/v1";
 var debug = getURLParameter("debug") == "true";
 // var debug = true;
 
-var currentUnit = "drone1";
+var currentUnit = ""
+var currentServerData = {};
 
-var marker = null;
+//var marker = null;
+var markers = [];
 
-var homeMarker = null;
+//var homeMarker = null;
+var homeMarkers = [];
 
 var mainMap = null;
 
@@ -85,63 +88,93 @@ $(function() {
     });
 });
 
+
+function onUnitChange() {
+
+    currentUnit = $('#drones').val();
+    clearQueue();
+    console.log("Unit changed to: " + currentUnit);
+    var newPos = markers[currentUnit].getPosition();
+    mainMap.setCenter(newPos.lat(), newPos.lng());
+    //$("#gsTitle").html("Ground Station - tracking " + currentUnit);
+    document.title = "Ground Station - tracking " + currentUnit;
+}
+
 /******************************** UI FUNCTION **********************************/
 
 function initMapWithRemoteCoords() {
+	
+	//get all drones and find the current one
 
-	getDroneLocation(initMap, currentUnit);
-
+	var maxTSUnitId = "";
+	var maxTS = 0;
 	getAllDrones(function(data) {
 		heartbeats = data.data;
 		var options = $("#drones");
 		$.each(heartbeats.heartbeats, function() {
-			options.append($("<option />").val(this.heartbeat.unitId).text(
-					this.heartbeat.unitId));
+			options.append($("<option />").val(this.heartbeat.unitId).text(this.heartbeat.unitId));
+			console.log("found unit:" + this.heartbeat.unitId + "/" + this.heartbeat.stateTimestampMS);
+			if (this.heartbeat.stateTimestampMS > maxTS) {
+				maxTS = this.heartbeat.stateTimestampMS;
+				maxTSUnitId = this.heartbeat.unitId;
+			}
 		});
-	});
 
+		$('#drones').val(maxTSUnitId != "" ? maxTSUnitId : $('#drones').val());
+		currentUnit = $('#drones').val();
+		console.log("selected:" + maxTSUnitId);
+
+		if (currentUnit != "") {
+			//getDroneLocation(initMap, currentUnit);
+			getAllDrones(initMap);
+		}
+	});
 }
 
 function initMap(data) {
-	if (!data || !data.data || !data.data.heartbeat) {
+	var currentHeartBeat = {
+		gpsLat : 0,
+		gpsLon : 0,
+		heading : 0,
+		unidId : "none"
+	};
+
+	//if (!data || !data.data || !data.data.heartbeat) {
+	if (!data || !data.data || !data.data.heartbeats) {
 		data = {
-			heartbeat : {
-				gpsLat : 0,
-				gpsLon : 0,
-				heading : 0
-			}
+			//heartbeat : currentHeartBeat
+			heartbeats : [currentHeartBeat]
 		};
 	} else {
 		data = data.data;
 	}
-	// if no gps lock
-	if (data.heartbeat.gpsLat == null)
-		data.heartbeat.gpsLat = 0;
-	if (data.heartbeat.gpsLon == null)
-		data.heartbeat.gpsLon = 0;
+
+	data.heartbeats.forEach(function(heartbeat) {
+		//console.log(heartbeat);
+		// if no gps lock
+		//if (data.heartbeat.gpsLat == null)
+			//data.heartbeat.gpsLat = 0;
+		//if (data.heartbeat.gpsLon == null)
+			//data.heartbeat.gpsLon = 0;
+		if (heartbeat.heartbeat.gpsLat == null)
+			heartbeat.heartbeat.gpsLat = 0;
+		if (heartbeat.heartbeat.gpsLon == null)
+			heartbeat.heartbeat.gpsLon = 0;
+
+		if (heartbeat.heartbeat.unitId == currentUnit) {
+			currentHeartBeat = heartbeat.heartbeat;
+		}
+	});
+
+	console.log("center map around:");
+	console.log(currentHeartBeat);
 
 	mainMap = new GMaps({
 		el : '#map',
 		zoom : 20,
-		lat : data.heartbeat.gpsLat,
-		lng : data.heartbeat.gpsLon
+		lat : currentHeartBeat.gpsLat,
+		lng : currentHeartBeat.gpsLon
 	});
-
-	// add top menu
-	/*	
-	 addControl("ARM", arm);
-	 addControl("DISARM", disarm);
-	 addControl("TAKEOFF", takeoff);	
-	 addControl("LAND", land);
-	 addControl("RETURN HOME", returnToHome);
-	 addControl("PAUSE", pause);
- 	 addControl("RESUME", resume);
- 	 addControl("POSITION", position);
- 	 addControl("LOITER", loiter);
- 	 addControl("MANUAL", manual);
-	
-	 var controlDiv = document.createElement('div');
-	 */
 
 	mainMap.setContextMenu({
 		control : 'map',
@@ -164,6 +197,8 @@ function initMap(data) {
 				});
 
 				allMarkers.push(waypoint);
+
+				addWP(e.latLng.lat(), e.latLng.lng());
 
 			}
 		}, {
@@ -220,98 +255,118 @@ function isInBounds(aMarker) {
 
 function updateMarkers() {
 
-	// a.forEach(function(element) {
-	// console.log(element);
-	// });
+	//getDroneLocation(drawMarkers, currentUnit);
+	getAllDrones(drawAllMarkers);
+}
 
-	getDroneLocation(function(data) {
+function drawAllMarkers(data) {
 
-		if (!data || !data.data || !data.data.heartbeat) {
-			data = {
-				heartbeat : {
-					gpsLat : 0,
-					gpsLon : 0,
-					heading : 0
-				}
-			};
-		} else {
-			data = data.data;
-		}
-		// if no GPS Lock
-		if (data.heartbeat.gpsLat == null)
-			data.heartbeat.gpsLat = 0;
-		if (data.heartbeat.gpsLon == null)
-			data.heartbeat.gpsLon = 0;
+	currentServerData = data;
 
-		//draw drone
-		if (marker == null) {
+	data.data.heartbeats.forEach(function(pheartbeat) {
+		drawMarkers({
+			data : {
+				heartbeat : pheartbeat.heartbeat
+			}
+		});
+	});
+}
 
-			marker = mainMap.addMarker({
-				lat : data.heartbeat.gpsLat,
-				lng : data.heartbeat.gpsLon,
-				title : data.heartbeat.unitId,
-				label : data.heartbeat.unitId,
+function drawMarkers(data) {
+
+	if (!data || !data.data || !data.data.heartbeat) {
+		data = {
+			heartbeat : {
+				gpsLat : 0,
+				gpsLon : 0,
+				heading : 0
+			}
+		};
+	} else {
+		data = data.data;
+	}
+	// if no GPS Lock
+	if (data.heartbeat.gpsLat == null)
+		data.heartbeat.gpsLat = 0;
+	if (data.heartbeat.gpsLon == null)
+		data.heartbeat.gpsLon = 0;
+
+	var marker = markers[data.heartbeat.unitId];
+
+	//draw drone
+	if (marker == null) {
+
+		marker = mainMap.addMarker({
+			lat : data.heartbeat.gpsLat,
+			lng : data.heartbeat.gpsLon,
+			title : data.heartbeat.unitId,
+			label : data.heartbeat.unitId,
+			icon : {
+				path : typeof data.heartbeat.heading !== 'undefined' ? google.maps.SymbolPath.FORWARD_CLOSED_ARROW : google.maps.SymbolPath.CIRCLE,
+				scale : 10,
+				strokeColor : "red",
+				rotation : data.heartbeat.heading
+			},
+			click : function(e) {
+				alert('You clicked in this marker');
+			}
+		});
+
+		markers[data.heartbeat.unitId] = marker;
+
+	} else {
+		marker.setPosition({
+			lat : data.heartbeat.gpsLat,
+			lng : data.heartbeat.gpsLon
+		});
+		marker.setIcon({
+			path : typeof data.heartbeat.heading !== 'undefined' ? google.maps.SymbolPath.FORWARD_CLOSED_ARROW : google.maps.SymbolPath.CIRCLE,
+			scale : 10,
+			strokeColor : "red",
+			rotation : data.heartbeat.heading
+		});
+	}
+	//draw home
+	var homeMarker = homeMarkers[data.heartbeat.unitId];
+	if (homeMarker == null) {
+
+		if (data.heartbeat.homeLat && data.heartbeat.homeLon) {
+
+			homeMarker = mainMap.addMarker({
+				lat : data.heartbeat.homeLat,
+				lng : data.heartbeat.homeLon,
+				title : "home-"+data.heartbeat.unitId,
+				label : "home-"+data.heartbeat.unitId,
 				icon : {
-					path : typeof data.heartbeat.heading !== 'undefined' ? google.maps.SymbolPath.FORWARD_CLOSED_ARROW : google.maps.SymbolPath.CIRCLE,
+					path : google.maps.SymbolPath.CIRCLE,
 					scale : 10,
-					strokeColor : "red",
-					rotation : data.heartbeat.heading
+					strokeColor : "red"
+					//rotation : data.heartbeat.heading
 				},
 				click : function(e) {
 					alert('You clicked in this marker');
 				}
 			});
+			homeMarkers[data.heartbeat.unitId] = homeMarker;
+		}
 
-		} else {
-			marker.setPosition({
-				lat : data.heartbeat.gpsLat,
-				lng : data.heartbeat.gpsLon
-			});
-			marker.setIcon({
-				path : typeof data.heartbeat.heading !== 'undefined' ? google.maps.SymbolPath.FORWARD_CLOSED_ARROW : google.maps.SymbolPath.CIRCLE,
-				scale : 10,
-				strokeColor : "red",
-				rotation : data.heartbeat.heading
+	} else {
+		if (data.heartbeat.homeLat && data.heartbeat.homeLon) {
+			homeMarker.setPosition({
+				lat : data.heartbeat.homeLat,
+				lng : data.heartbeat.homeLon
 			});
 		}
-		//draw home
-		if (homeMarker == null) {
-
-			if (data.heartbeat.homeLat && data.heartbeat.homeLon) {
-
-				homeMarker = mainMap.addMarker({
-					lat : data.heartbeat.homeLat,
-					lng : data.heartbeat.homeLon,
-					title : "home-"+data.heartbeat.unitId,
-					label : "home-"+data.heartbeat.unitId,
-					icon : {
-						path : google.maps.SymbolPath.CIRCLE,
-						scale : 10,
-						strokeColor : "red"
-						//rotation : data.heartbeat.heading
-					},
-					click : function(e) {
-						alert('You clicked in this marker');
-					}
-				});
-			}
-
-		} else {
-			if (data.heartbeat.homeLat && data.heartbeat.homeLon) {
-				homeMarker.setPosition({
-					lat : data.heartbeat.homeLat,
-					lng : data.heartbeat.homeLon
-				});
-			}
-			homeMarker.setIcon({
-				path : google.maps.SymbolPath.CIRCLE,
-				scale : 10,
-				strokeColor : "red"
-				//rotation : data.heartbeat.heading
-			});
-		}
+		homeMarker.setIcon({
+			path : google.maps.SymbolPath.CIRCLE,
+			scale : 10,
+			strokeColor : "red"
+			//rotation : data.heartbeat.heading
+		});
+	}
+	if (data.heartbeat.unitId == currentUnit) {
 		updateInfo(data);
-	}, currentUnit);
+	}
 }
 
 function updateInfo(data) {
@@ -485,6 +540,7 @@ function buildActionRequest(unitId, command, parameters) {
 
 	return action;
 }
+
 
 /******************* MENU HANDLERS *********************************************/
 
