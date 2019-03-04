@@ -395,6 +395,7 @@ function updateInfo(data) {
 		$("#curr_tot").html((data.heartbeat.currTotmAh ? data.heartbeat.currTotmAh : "--") + " mAh");
 		$("#modemstatus").html(data.heartbeat.modemstatus);
 		$("#modemsignal").html(data.heartbeat.modemsignal);
+		$("#message").html(data.heartbeat.message ? data.heartbeat.message + " / " + data.heartbeat.messageSev : "--");
 
 		//update command list
 		listActions(currentUnit, function(commands) {
