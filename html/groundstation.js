@@ -385,12 +385,12 @@ function updateInfo(data) {
 		$("#alt-lidar").html((data.heartbeat.lidarAlt ? data.heartbeat.lidarAlt.toFixed(2) : "--") + " m");
 		//$("#alt-gps").html((data.heartbeat.gpsAlt ? data.heartbeat.gpsAlt.toFixed(2) : "--") + " m");
 		$("#alt-gps").html((data.heartbeat.gpsAltRel ? data.heartbeat.gpsAltRel.toFixed(2) : "--") + " m");
-		$("#gps-sats").html(data.heartbeat.gpsNumSats);
-		$("#gps-lock").html(data.heartbeat.gpsLock);
-		$("#bat").html(
-				(data.heartbeat.currVolts ? data.heartbeat.currVolts : "--") + " V " + (data.heartbeat.currVoltsLevel ?
-				data.heartbeat.currVoltsLevel : "--")
-						+ "%");
+		$("#gps-sats").html(data.heartbeat.gpsNumSats
+				   + (data.heartbeat.gps2NumSats ? "/" + data.heartbeat.gps2NumSats : ""));
+		$("#gps-lock").html(data.heartbeat.gpsLock
+				   + (data.heartbeat.gps2Lock ? "/" + data.heartbeat.gps2Lock : ""));
+		$("#bat").html((data.heartbeat.currVolts ? data.heartbeat.currVolts : "--") + " V "
+				+ (data.heartbeat.currVoltsLevel ? data.heartbeat.currVoltsLevel : "--") + "%");
 		$("#curr").html((data.heartbeat.currA ? data.heartbeat.currA : "--") + " A");
 		$("#curr_tot").html((data.heartbeat.currTotmAh ? data.heartbeat.currTotmAh : "--") + " mAh");
 		$("#modemstatus").html(data.heartbeat.modemstatus);
