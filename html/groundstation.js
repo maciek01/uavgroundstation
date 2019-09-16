@@ -24,6 +24,12 @@ var lastAlt = 0;
 
 var lastSpeed = 0;
 
+var lastGotoLat = null;
+
+var lastGotoLon = null;
+
+var dest = null;
+
 var currentWPIndex = 1;
 
 var allMarkers = [];
@@ -206,6 +212,24 @@ function initMap(data) {
 			title : 'GO HERE',
 			name : 'go_here',
 			action : function(e) {
+
+				if (dest) {
+					dest.setPosition({
+						lat : e.latLng.lat(),
+                                                lng : e.latLng.lng()
+					});
+				} else {
+					dest = this.addMarker({
+						lat : e.latLng.lat(),
+						lng : e.latLng.lng(),
+						title : 'DEST',
+						icon : {
+							path : google.maps.SymbolPath.CIRCLE,
+							scale : 10,
+							strokeColor : "green"
+						}
+					});
+				}
 
 				gotoXYZ(e.latLng.lat(), e.latLng.lng());
 
@@ -659,6 +683,9 @@ function incSpeed1() {
 }
 
 function gotoXYZ(lat, lon) {
+
+	lastGotoLat = lat;
+	lastGotoLon = lon;
 
 	var parameters = [ {
 		name : "lat",
