@@ -625,6 +625,11 @@ function loiter() {
 
 	});
 }
+function autonomous() {
+	sendAction(buildActionRequest(currentUnit, "AUTO"), function() {
+
+	});
+}
 function position() {
 	sendAction(buildActionRequest(currentUnit, "POSITION"), function() {
 
