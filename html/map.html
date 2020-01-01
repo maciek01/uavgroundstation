@@ -68,6 +68,18 @@
         text-align: left;
         font-family: 'Roboto','sans-serif';
       }  
+
+      #commands-panel {
+        background-color: #fff;
+        text-align: left;
+        font-family: 'Roboto','sans-serif';
+      }  
+
+      #commands2-panel {
+        background-color: #fff;
+        text-align: left;
+        font-family: 'Roboto','sans-serif';
+      }  
       
       #op-alt {
         background-color: #fff;
@@ -115,7 +127,7 @@
   <body>
   <!-- Add an input button to initiate the toggle method on the overlay. -->
     <div id="actions-panel">
-      <div>
+      <div id="commands-panel">
         <label>Select vehicle</label>
   	  <select id="drones" onChange="onUnitChange()"></select>
   	  <label>Select command</label>
@@ -131,6 +143,9 @@
         <input type="button" value="AUTO" onclick="autonomous();"></input>
         <input type="button" value="MANUAL" onclick="manual();"></input>
         <input type="button" value="REHOME" onclick="rehome();"></input>
+      </div>
+      <div id="commands2-panel">
+        <input type="button" value="VIDEO" onclick="togglevid();"></input>
       </div>
       <div id="op-alt">
         <label>Operating Alt:</label>
@@ -200,6 +215,10 @@
       <div id="data-item">
         <label><strong>CURR</strong>:</label>
         <label id="curr_tot">--</label>
+      </div>
+      <div id="data-item">
+        <label>VIDEO:</label>
+        <label id="videostat">--</label>
       </div>
       <div id="data-item">
         <label>LINK STAT:</label>

@@ -417,6 +417,7 @@ function updateInfo(data) {
 				+ (data.heartbeat.currVoltsLevel ? data.heartbeat.currVoltsLevel : "--") + "%");
 		$("#curr").html((data.heartbeat.currA ? data.heartbeat.currA : "--") + " A");
 		$("#curr_tot").html((data.heartbeat.currTotmAh ? data.heartbeat.currTotmAh : "--") + " mAh");
+		$("#videostat").html((data.heartbeat.videostat ? data.heartbeat.videostat : "--"));
 		$("#modemstatus").html(data.heartbeat.modemstatus);
 		$("#modemsignal").html(data.heartbeat.modemsignal);
 		$("#message").html(data.heartbeat.message ? data.heartbeat.message + " / " + data.heartbeat.messageSev : "--");
@@ -642,6 +643,11 @@ function manual() {
 }
 function rehome() {
 	sendAction(buildActionRequest(currentUnit, "REHOME"), function() {
+
+	});
+}
+function togglevid() {
+	sendAction(buildActionRequest(currentUnit, "TOGGLEVID"), function() {
 
 	});
 }
