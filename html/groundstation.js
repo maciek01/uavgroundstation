@@ -34,6 +34,8 @@ var currentWPIndex = 1;
 
 var allMarkers = [];
 
+var current_videostat = "";
+
 var fakeDroneHeartbeat = {
 	heartbeat : {
 		"unitId" : "drone1",
@@ -421,6 +423,16 @@ function updateInfo(data) {
 		$("#modemstatus").html(data.heartbeat.modemstatus);
 		$("#modemsignal").html(data.heartbeat.modemsignal);
 		$("#message").html(data.heartbeat.message ? data.heartbeat.message + " / " + data.heartbeat.messageSev : "--");
+
+		//toggle video
+		if (current_videostat !== data.heartbeat.videostat) {
+			current_videostat = data.heartbeat.videostat;
+			if (current_videostat === "ON") {
+				startStream();
+			} else {
+				stopStream();
+			}
+		}
 
 		//update command list
 		listActions(currentUnit, function(commands) {

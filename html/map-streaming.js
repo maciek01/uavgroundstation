@@ -42,15 +42,13 @@
 // in the presented order. The first working server will be used for
 // the whole session.
 //
+
+
 var server = null;
 if(window.location.protocol === 'http:')
 	server = "http://" + window.location.hostname + ":8088/janus";
 else
 	server = "https://" + window.location.hostname + ":8089/janus";
-
-
-
-server = "http://home.kolesnik.org:8088/janus";
 
 
 var janus = null;
@@ -70,8 +68,12 @@ var selectedStream = "10";//null;
 $(document).ready(function() {
 	// Initialize the library (all console debuggers enabled)
 	Janus.init({debug: "all", callback: function() {
+
+
 		// Use a button to start the demo
-		$('#vidtoggle').one('click', function() {
+		//$('#vidtoggle').one('click', function() {
+
+
 			// Make sure the browser supports WebRTC
 			if(!Janus.isWebrtcSupported()) {
 
@@ -262,7 +264,9 @@ $(document).ready(function() {
 				});
 			//too early to start
 			//startStream();
-		});
+
+		//});//one()
+
 	}});
 });
 
