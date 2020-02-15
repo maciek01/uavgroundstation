@@ -428,8 +428,10 @@ function updateInfo(data) {
 		if (current_videostat !== data.heartbeat.videostat) {
 			current_videostat = data.heartbeat.videostat;
 			if (current_videostat === "ON") {
+				$("#vidtoggle").html("VIDEO OFF");
 				startStream();
 			} else {
+				$("#vidtoggle").html("VIDEO ON");
 				stopStream();
 			}
 		}
