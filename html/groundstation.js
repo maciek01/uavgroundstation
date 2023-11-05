@@ -403,22 +403,22 @@ function updateInfo(data) {
 		$("#unit").html(data.heartbeat.unitId);
 		$("#uavMode").html(data.heartbeat.mode);
 		$("#armed").html(data.heartbeat.armed ? "ARMED" : "DISARMED");
-		$("#heading").html(data.heartbeat.heading);
+		$("#heading").html(data.heartbeat.heading ? data.heartbeat.heading.toFixed(0) : "--");
 		$("#spinnerAlt").val(data.heartbeat.operatingAlt);
 		$("#spinnerSpeed").val(data.heartbeat.operatingSpeed);
-		$("#gps-speed").html((data.heartbeat.gpsSpeed ? data.heartbeat.gpsSpeed.toFixed(2) : "--") + " m/s");
-		$("#alt-baro").html((data.heartbeat.baroAlt ? data.heartbeat.baroAlt.toFixed(2) : "--") + " m");
-		$("#alt-lidar").html((data.heartbeat.lidarAlt ? data.heartbeat.lidarAlt.toFixed(2) : "--") + " m");
-		//$("#alt-gps").html((data.heartbeat.gpsAlt ? data.heartbeat.gpsAlt.toFixed(2) : "--") + " m");
-		$("#alt-gps").html((data.heartbeat.gpsAltRel ? data.heartbeat.gpsAltRel.toFixed(2) : "--") + " m");
+		$("#gps-speed").html((data.heartbeat.gpsSpeed ? data.heartbeat.gpsSpeed.toFixed(1) : "--") + " m/s");
+		$("#alt-baro").html((data.heartbeat.baroAlt ? data.heartbeat.baroAlt.toFixed(1) : "--") + " m");
+		$("#alt-lidar").html((data.heartbeat.lidarAlt ? data.heartbeat.lidarAlt.toFixed(1) : "--") + " m");
+		//$("#alt-gps").html((data.heartbeat.gpsAlt ? data.heartbeat.gpsAlt.toFixed(1) : "--") + " m");
+		$("#alt-gps").html((data.heartbeat.gpsAltRel ? data.heartbeat.gpsAltRel.toFixed(1) : "--") + " m");
 		$("#gps-sats").html(data.heartbeat.gpsNumSats
 				   + (data.heartbeat.gps2NumSats ? "/" + data.heartbeat.gps2NumSats : ""));
 		$("#gps-lock").html(data.heartbeat.gpsLock
 				   + (data.heartbeat.gps2Lock ? "/" + data.heartbeat.gps2Lock : ""));
-		$("#bat").html((data.heartbeat.currVolts ? data.heartbeat.currVolts : "--") + " V "
-				+ (data.heartbeat.currVoltsLevel ? data.heartbeat.currVoltsLevel : "--") + "%");
-		$("#curr").html((data.heartbeat.currA ? data.heartbeat.currA : "--") + " A");
-		$("#curr_tot").html((data.heartbeat.currTotmAh ? data.heartbeat.currTotmAh : "--") + " mAh");
+		$("#bat").html((data.heartbeat.currVolts ? data.heartbeat.currVolts.toFixed(1) : "--") + " V "
+				+ (data.heartbeat.currVoltsLevel ? (100 * data.heartbeat.currVoltsLevel).toFixed(0) : "--") + "%");
+		$("#curr").html((data.heartbeat.currA ? data.heartbeat.currA.toFixed(2) : "--") + " A");
+		$("#curr_tot").html((data.heartbeat.currTotmAh ? data.heartbeat.currTotmAh.toFixed(0) : "--") + " mAh");
 		$("#videostat").html((data.heartbeat.videostat ? data.heartbeat.videostat : "--"));
 		$("#modemstatus").html(data.heartbeat.modemstatus);
 		$("#modemsignal").html(data.heartbeat.modemsignal);
