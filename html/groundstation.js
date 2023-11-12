@@ -416,7 +416,7 @@ function updateInfo(data) {
 		$("#gps-lock").html(data.heartbeat.gpsLock
 				   + (data.heartbeat.gps2Lock ? "/" + data.heartbeat.gps2Lock : ""));
 		$("#bat").html((data.heartbeat.currVolts ? data.heartbeat.currVolts.toFixed(1) : "--") + " V "
-				+ (data.heartbeat.currVoltsLevel ? (100 * data.heartbeat.currVoltsLevel).toFixed(0) : "--") + "%");
+				+ (data.heartbeat.currVoltsLevel ? ((data.heartbeat.currVoltsLevel > 1 ? 1 : 100) * data.heartbeat.currVoltsLevel).toFixed(0) : "--") + "%");
 		$("#curr").html((data.heartbeat.currA ? data.heartbeat.currA.toFixed(2) : "--") + " A");
 		$("#curr_tot").html((data.heartbeat.currTotmAh ? data.heartbeat.currTotmAh.toFixed(0) : "--") + " mAh");
 		$("#videostat").html((data.heartbeat.videostat ? data.heartbeat.videostat : "--"));
