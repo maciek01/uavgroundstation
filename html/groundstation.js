@@ -665,6 +665,16 @@ function togglevid() {
 
 	});
 }
+function upWifi() {
+	sendAction(buildActionRequest(currentUnit, "UPWIFI"), function() {
+
+	});
+}
+function downWifi() {
+	sendAction(buildActionRequest(currentUnit, "DOWNWIFI"), function() {
+
+	});
+}
 function decAlt1() {
 	sendAction(buildActionRequest(currentUnit, "DECALT1"), function() {
 
