@@ -675,6 +675,11 @@ function downWifi() {
 
 	});
 }
+function setToCurrAlt() {
+	sendAction(buildActionRequest(currentUnit, "SETCURRALT"), function() {
+
+	});
+}
 function decAlt1() {
 	sendAction(buildActionRequest(currentUnit, "DECALT1"), function() {
 
