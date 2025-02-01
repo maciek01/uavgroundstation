@@ -604,9 +604,11 @@ function updateStreamsList() {
 	}});
 }
 
-function startStream() {
+function startStream(channel) {
 	if (streaming == null)
 		return;
+
+	selectedStream = channel;
 
 	Janus.log("Selected video id #" + selectedStream);
 	if(selectedStream === undefined || selectedStream === null) {
