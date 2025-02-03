@@ -604,20 +604,45 @@ function updateStreamsList() {
 	}});
 }
 
-function startStream(channel) {
+function startStream(channel, unitId) {
 	if (streaming == null)
 		return;
 
-	selectedStream = channel;
+	selectedStream = parseInt(channel);
 
 	Janus.log("Selected video id #" + selectedStream);
 	if(selectedStream === undefined || selectedStream === null) {
 		bootbox.alert("Select a stream from the list");
 		return;
 	}
+
+	//create new mountpoint and watch it
+
+	createStreamBody = {
+		"audio": false,
+		"id": selectedStream,
+		"description": unitId + " drone stream",
+		"name": "channel " + channel + ":" + unitId,
+		"permanent": false,
+		"request": "create",
+		"type": "rtsp",
+		"url": "rtsp://piserver3:8554/" + unitId,
+		"video": true,
+		"rtsp_reconnect_delay": 5,
+		"rtsp_session_timeout": 0,
+		"rtsp_timeout": 10,
+		"rtsp_conn_timeout": 5,
+		"rtsp_failcheck": false
+	};
+
+	//dynamic create stream - TODO: needs more work
+	//streaming.send({"message": createStreamBody, success: function(result) {
+        //}});
+
 	
-	var body = { "request": "watch", id: parseInt(selectedStream) };
+	var body = { "request": "watch", id: selectedStream };
 	streaming.send({"message": body});
+
 	// No remote video yet
 	//$('#stream').append('<video id="waitingvideo" width=320 height=240 />');
 	
@@ -627,6 +652,16 @@ function stopStream() {
 
 	var body = { "request": "stop" };
 	streaming.send({"message": body});
+
+	var destroyStreamBody = {
+		"request" : "destroy",
+		"id" : selectedStream,
+		"permanent" : false
+	};
+
+	//dynamic create stream - TODO: needs more work
+	//streaming.send({"message": destroyStreamBody});
+
 	streaming.hangup();
 	
 	$('#status').empty().hide();
