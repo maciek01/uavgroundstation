@@ -618,7 +618,7 @@ function startStream(channel, unitId) {
 
 	//create new mountpoint and watch it
 
-	createStreamBody = {
+	var createStreamBody = {
 		"audio": false,
 		"id": selectedStream,
 		"description": unitId + " drone stream",
