@@ -675,6 +675,26 @@ function downWifi() {
 
 	});
 }
+function moveLeft() {
+	sendAction(buildActionRequest(currentUnit, "MVLEFT"), function() {
+
+	});
+}
+function moveRight() {
+	sendAction(buildActionRequest(currentUnit, "MVRIGHT"), function() {
+
+	});
+}
+function moveForward() {
+	sendAction(buildActionRequest(currentUnit, "MVFWD"), function() {
+
+	});
+}
+function moveBack() {
+	sendAction(buildActionRequest(currentUnit, "MVBCK"), function() {
+
+	});
+}
 function setToCurrAlt() {
 	sendAction(buildActionRequest(currentUnit, "SETCURRALT"), function() {
 
