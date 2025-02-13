@@ -280,10 +280,40 @@ function isInBounds(aMarker) {
 	return mainMap.getBounds().contains(aMarker.getPosition());
 }
 
+//MAIN LOOP
 function updateMarkers() {
 
 	//getDroneLocation(drawMarkers, currentUnit);
 	getAllDrones(drawAllMarkers);
+
+	getAdsbs(drawAdsbs);
+}
+
+
+function drawAdsbs(data) {
+
+	
+	//console.log("ADSB data: " + data.data.adbs.unitId);
+	//console.log("ADSB data: " +  JSON.stringify(data.data.adsb.targets));
+	console.log("ADSB data: " +  JSON.stringify(data));
+
+	if (data.data) {
+
+		if (data.data.adsb) {
+			if (data.data.adsb.targets) {
+				if (data.data.adsb.targets.states) {
+
+
+					console.log(data.data.adsb.targets.states[0][1]);
+
+
+				}
+			}
+
+		}
+
+	}
+
 }
 
 function drawAllMarkers(data) {
@@ -478,6 +508,10 @@ function getAllDronesURL() {
 	return SERVER_URL + "/heartbeats";
 }
 
+function getAdsbURL(unit) {
+	return SERVER_URL + "/adsb/" + unit;
+}
+
 function getActionURL() {
 	return SERVER_URL + "/action";
 }
@@ -546,6 +580,15 @@ function getAllDrones(callback) {
 		return;
 	}
 	$.get(getAllDronesURL(), {}, callback).fail(function() {
+		// Handle error here
+		callback(null);
+	});
+}
+
+function getAdsbs(callback) {
+	if (!currentUnit)
+		return;
+	$.get(getAdsbURL(currentUnit), {}, callback).fail(function() {
 		// Handle error here
 		callback(null);
 	});
