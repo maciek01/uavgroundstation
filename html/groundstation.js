@@ -348,19 +348,24 @@ function drawAdsbs(data) {
 
         var marker = adsbMarkers[data.adsb.hex];
 
+	var heading = data.adsb.track ? data.adsb.track : data.adsb.true_heading;
+	var flight = data.adsb.flight ? data.adsb.flight : "--";
+	var alt = data.adsb.alt_geom ? Math.floor(data.adsb.alt_geom * 0.3048) : "--";
+	var speed = data.adsb.gs ? data.adsb.gs : "--";
+
 	//draw adsb
 	if (marker == null) {
 
 		marker = mainMap.addMarker({
                         lat : data.adsb.lat,
                         lng : data.adsb.lon,
-                        title : data.adsb.flight + "\nALT: " + Math.floor(data.adsb.alt_geom / 3) + "\nSPEED: " + data.adsb.gs,
-                        label : data.adsb.flight + " " + Math.floor(data.adsb.alt_geom / 3),
+                        title : flight + "\nALT: " + alt + "\nSPEED: " + speed,
+                        label : flight + " / " + alt,
                         icon : {
-                                path : google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+                                path : heading ? google.maps.SymbolPath.FORWARD_CLOSED_ARROW : google.maps.SymbolPath.CIRCLE,
                                 scale : 5,
-                                strokeColor : data.adsb.alt_geom > 600 ? "green" : "orange",
-                                rotation : data.adsb.track
+                                strokeColor : alt > 200 ? "green" : "orange",
+                                rotation : heading
                         },
                         click : function(e) {
                                 alert('You clicked in this marker');
@@ -374,13 +379,13 @@ function drawAdsbs(data) {
                         lat : data.adsb.lat,
                         lng : data.adsb.lon
                 });
-		marker.setTitle(data.adsb.flight + "\nALT: " + Math.floor(data.adsb.alt_geom / 3) + "\nSPEED: " + data.adsb.gs);
-		marker.setLabel(data.adsb.flight + " " + Math.floor(data.adsb.alt_geom / 3));
+		marker.setTitle(flight + "\nALT: " + alt + "\nSPEED: " + speed);
+		marker.setLabel(flight + " / " + alt);
                 marker.setIcon({
-                        path : google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+                        path : heading ? google.maps.SymbolPath.FORWARD_CLOSED_ARROW : google.maps.SymbolPath.CIRCLE,
                         scale : 5,
                         strokeColor : data.adsb.alt_geom > 600 ? "green" : "orange",
-                        rotation : data.adsb.track
+                        rotation : heading
                 });
         }
 
