@@ -354,6 +354,8 @@ function drawAdsbs(data) {
 	var speed = data.adsb.gs ? data.adsb.gs : "--";
 	var type = data.adsb.t ? data.adsb.t : "--";
 
+	var baro = data.adsb.alt_baro ? data.adsb.alt_baro : "";
+
 	//draw adsb
 	if (marker == null) {
 
@@ -365,7 +367,7 @@ function drawAdsbs(data) {
                         icon : {
                                 path : heading ? google.maps.SymbolPath.FORWARD_CLOSED_ARROW : google.maps.SymbolPath.CIRCLE,
                                 scale : 5,
-                                strokeColor : alt > 200 ? "green" : "orange",
+                                strokeColor : alt > 200 ? "green" : (baro === "ground" ? "gray" : "orange"),
                                 rotation : heading
                         },
                         click : function(e) {
@@ -386,7 +388,7 @@ function drawAdsbs(data) {
                 marker.setIcon({
                         path : heading ? google.maps.SymbolPath.FORWARD_CLOSED_ARROW : google.maps.SymbolPath.CIRCLE,
                         scale : 5,
-                        strokeColor : data.adsb.alt_geom > 600 ? "green" : "orange",
+			strokeColor : alt > 200 ? "green" : (baro === "ground" ? "gray" : "orange"),
                         rotation : heading
                 });
 		marker.click = function(e) {
