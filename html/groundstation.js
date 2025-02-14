@@ -389,6 +389,9 @@ function drawAdsbs(data) {
                         strokeColor : data.adsb.alt_geom > 600 ? "green" : "orange",
                         rotation : heading
                 });
+		marker.click = function(e) {
+				alert("FLIGHT: " + flight + "\nTYPE: " + type + "\nALT: " + alt + "\nSPEED: " + speed);
+			};
         }
 
 
