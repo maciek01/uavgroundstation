@@ -302,13 +302,28 @@ function drawAllAdsbs(data) {
 	if (data.data && data.data.adsb && data.data.adsb.targets && data.data.adsb.targets.ac) {
 		//console.log(data.data.adsb.targets.ac[0].flight);
 
+		var list = [];
 
 		data.data.adsb.targets.ac.forEach(function(adsb) {
 			drawAdsbs({
 					unitId : data.data.adsb.unitId,
 					adsb : adsb
 			});
+			list.push(adsb.hex);
 		});
+
+		console.log("Rendered ADSB targets: " + list.length);
+
+		Object.keys(adsbMarkers).forEach(function(key) {
+
+			if (!list.includes(key)) {
+				mainMap.removeMarkers(adsbMarkers[key]);
+				adsbMarkers[key] = null;
+				delete adsbMarkers[key];
+
+				console.log("Removed ADSB " + key);
+			}
+                });
 
 	}
 
@@ -332,10 +347,10 @@ function drawAdsbs(data) {
 
         var marker = adsbMarkers[data.adsb.hex];
 
-        //draw adsb
-        if (marker == null) {
+	//draw adsb
+	if (marker == null) {
 
-                marker = mainMap.addMarker({
+		marker = mainMap.addMarker({
                         lat : data.adsb.lat,
                         lng : data.adsb.lon,
                         title : data.adsb.flight + "\nALT: " + Math.floor(data.adsb.alt_geom / 3) + "\nSPEED: " + data.adsb.gs,
