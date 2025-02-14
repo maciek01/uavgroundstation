@@ -13,6 +13,8 @@ var currentServerData = {};
 //var marker = null;
 var markers = [];
 
+var adsbMarkers = [];
+
 //var homeMarker = null;
 var homeMarkers = [];
 
@@ -286,31 +288,27 @@ function updateMarkers() {
 	//getDroneLocation(drawMarkers, currentUnit);
 	getAllDrones(drawAllMarkers);
 
-	getAdsbs(drawAdsbs);
+	getAllAdsbs(drawAllAdsbs);
 }
 
 
-function drawAdsbs(data) {
+function drawAllAdsbs(data) {
 
 	
 	//console.log("ADSB data: " + data.data.adbs.unitId);
 	//console.log("ADSB data: " +  JSON.stringify(data.data.adsb.targets));
-	console.log("ADSB data: " +  JSON.stringify(data));
+	//console.log("ADSB data: " +  JSON.stringify(data));
 
-	if (data.data) {
-
-		if (data.data.adsb) {
-			if (data.data.adsb.targets) {
-				if (data.data.adsb.targets.states) {
+	if (data.data && data.data.adsb && data.data.adsb.targets && data.data.adsb.targets.ac) {
+		//console.log(data.data.adsb.targets.ac[0].flight);
 
 
-					console.log(data.data.adsb.targets.states[0][1]);
-
-
-				}
-			}
-
-		}
+		data.data.adsb.targets.ac.forEach(function(adsb) {
+			drawAdsbs({
+					unitId : data.data.adsb.unitId,
+					adsb : adsb
+			});
+		});
 
 	}
 
@@ -327,6 +325,50 @@ function drawAllMarkers(data) {
 			}
 		});
 	});
+}
+
+function drawAdsbs(data) {
+
+
+        var marker = adsbMarkers[data.adsb.hex];
+
+        //draw adsb
+        if (marker == null) {
+
+                marker = mainMap.addMarker({
+                        lat : data.adsb.lat,
+                        lng : data.adsb.lon,
+                        title : data.adsb.flight + "\nALT: " + Math.floor(data.adsb.alt_geom / 3) + "\nSPEED: " + data.adsb.gs,
+                        label : data.adsb.flight + " " + Math.floor(data.adsb.alt_geom / 3),
+                        icon : {
+                                path : google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+                                scale : 5,
+                                strokeColor : data.adsb.alt_geom > 600 ? "green" : "orange",
+                                rotation : data.adsb.track
+                        },
+                        click : function(e) {
+                                alert('You clicked in this marker');
+                        }
+                });
+
+                adsbMarkers[data.adsb.hex] = marker;
+
+        } else {
+                marker.setPosition({
+                        lat : data.adsb.lat,
+                        lng : data.adsb.lon
+                });
+		marker.setTitle(data.adsb.flight + "\nALT: " + Math.floor(data.adsb.alt_geom / 3) + "\nSPEED: " + data.adsb.gs);
+		marker.setLabel(data.adsb.flight + " " + Math.floor(data.adsb.alt_geom / 3));
+                marker.setIcon({
+                        path : google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+                        scale : 5,
+                        strokeColor : data.adsb.alt_geom > 600 ? "green" : "orange",
+                        rotation : data.adsb.track
+                });
+        }
+
+
 }
 
 function drawMarkers(data) {
@@ -585,7 +627,7 @@ function getAllDrones(callback) {
 	});
 }
 
-function getAdsbs(callback) {
+function getAllAdsbs(callback) {
 	if (!currentUnit)
 		return;
 	$.get(getAdsbURL(currentUnit), {}, callback).fail(function() {
