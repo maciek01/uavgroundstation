@@ -318,6 +318,7 @@ function drawAllAdsbs(data) {
 
 			if (!list.includes(key)) {
 				mainMap.removeMarkers(adsbMarkers[key]);
+				adsbMarkers[key].setMap(null);
 				adsbMarkers[key] = null;
 				delete adsbMarkers[key];
 
