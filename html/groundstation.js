@@ -302,6 +302,7 @@ function drawAllAdsbs(data) {
 	if (data.data && data.data.adsb && data.data.adsb.targets && data.data.adsb.targets.ac) {
 		//console.log(data.data.adsb.targets.ac[0].flight);
 
+		//list of fresh states
 		var list = [];
 
 		data.data.adsb.targets.ac.forEach(function(adsb) {
@@ -316,6 +317,7 @@ function drawAllAdsbs(data) {
 
 		Object.keys(adsbMarkers).forEach(function(key) {
 
+			//remove markers which didnt get fresh state
 			if (!list.includes(key)) {
 				mainMap.removeMarkers(adsbMarkers[key]);
 				adsbMarkers[key].setMap(null);
@@ -362,7 +364,7 @@ function drawAdsbs(data) {
 		marker = mainMap.addMarker({
                         lat : data.adsb.lat,
                         lng : data.adsb.lon,
-                        title : flight + "\nTYPE: " + type + "\nALT: " + alt + "\nSPEED: " + speed,
+                        title : "FLIGHT: " + flight + "\nTYPE: " + type + "\nALT: " + alt + "\nSPEED: " + speed,
                         label : flight + " / " + alt,
                         icon : {
                                 path : heading ? google.maps.SymbolPath.FORWARD_CLOSED_ARROW : google.maps.SymbolPath.CIRCLE,
@@ -372,7 +374,8 @@ function drawAdsbs(data) {
                         },
                         click : function(e) {
 				//static data for now
-                                alert("FLIGHT: " + flight + "\nTYPE: " + type + "\nALT: " + alt + "\nSPEED: " + speed);
+                                //alert("FLIGHT: " + flight + "\nTYPE: " + type + "\nALT: " + alt + "\nSPEED: " + speed);
+				alert(marker.title);
                         }
                 });
 
@@ -383,7 +386,7 @@ function drawAdsbs(data) {
                         lat : data.adsb.lat,
                         lng : data.adsb.lon
                 });
-		marker.setTitle(flight + "\nTYPE: " + type + "\nALT: " + alt + "\nSPEED: " + speed);
+		marker.setTitle("FLIGHT: " + flight + "\nTYPE: " + type + "\nALT: " + alt + "\nSPEED: " + speed);
 		marker.setLabel(flight + " / " + alt);
                 marker.setIcon({
                         path : heading ? google.maps.SymbolPath.FORWARD_CLOSED_ARROW : google.maps.SymbolPath.CIRCLE,
@@ -392,7 +395,8 @@ function drawAdsbs(data) {
                         rotation : heading
                 });
 		marker.click = function(e) {
-				alert("FLIGHT: " + flight + "\nTYPE: " + type + "\nALT: " + alt + "\nSPEED: " + speed);
+				//alert("FLIGHT: " + flight + "\nTYPE: " + type + "\nALT: " + alt + "\nSPEED: " + speed);
+				alert(marker.title);
 			};
         }
 
