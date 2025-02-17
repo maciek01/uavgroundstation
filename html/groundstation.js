@@ -9,6 +9,7 @@ var debug = getURLParameter("debug") == "true";
 
 var currentUnit = ""
 var currentServerData = {};
+var currentHeartBeat = null;
 
 //var marker = null;
 var markers = [];
@@ -363,6 +364,15 @@ function drawAdsbs(data) {
 
 	var alt = baro;
 
+	//are we at least 200m apart?
+	var altWarn = false;
+	if (currentHeartBeat != null) {
+		if (currentHeartBeat.baroAlt && baro) {
+			if (Math.abs(currentHeartBeat.baroAlt - baro) < 200) {
+				altWarn = true;
+			}
+		}
+	}
 
 	//draw adsb
 	if (marker == null) {
@@ -502,6 +512,11 @@ function drawMarkers(data) {
 		});
 	}
 	if (data.heartbeat.unitId == currentUnit) {
+
+		//save current dorone data
+
+		currentHeartBeat = data.heartbeat;
+
 		updateInfo(data);
 	}
 }
