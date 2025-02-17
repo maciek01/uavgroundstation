@@ -352,11 +352,17 @@ function drawAdsbs(data) {
 
 	var heading = data.adsb.track ? data.adsb.track : data.adsb.true_heading;
 	var flight = data.adsb.flight ? data.adsb.flight : "--";
-	var alt = data.adsb.alt_geom ? Math.floor(data.adsb.alt_geom * 0.3048) : "--";
+	var baro = data.adsb.alt_baro ? data.adsb.alt_baro : "";
+	if ("ground" === baro) {
+		baro = 0;
+	}
+	baro = Math.floor(baro * 0.3048);
+	var galt = data.adsb.alt_geom ? Math.floor(data.adsb.alt_geom * 0.3048) : "--";
 	var speed = data.adsb.gs ? data.adsb.gs : "--";
 	var type = data.adsb.t ? data.adsb.t : "--";
 
-	var baro = data.adsb.alt_baro ? data.adsb.alt_baro : "";
+	var alt = baro;
+
 
 	//draw adsb
 	if (marker == null) {
@@ -369,7 +375,7 @@ function drawAdsbs(data) {
                         icon : {
                                 path : heading ? google.maps.SymbolPath.FORWARD_CLOSED_ARROW : google.maps.SymbolPath.CIRCLE,
                                 scale : 5,
-                                strokeColor : alt > 200 ? "green" : (baro === "ground" ? "gray" : "orange"),
+                                strokeColor : alt > 200 ? "green" : (baro == 0 ? "gray" : "orange"),
                                 rotation : heading
                         },
                         click : function(e) {
@@ -391,7 +397,7 @@ function drawAdsbs(data) {
                 marker.setIcon({
                         path : heading ? google.maps.SymbolPath.FORWARD_CLOSED_ARROW : google.maps.SymbolPath.CIRCLE,
                         scale : 5,
-			strokeColor : alt > 200 ? "green" : (baro === "ground" ? "gray" : "orange"),
+			strokeColor : alt > 200 ? "green" : (baro == 0 ? "gray" : "orange"),
                         rotation : heading
                 });
 		marker.click = function(e) {
