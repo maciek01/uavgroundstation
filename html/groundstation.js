@@ -368,7 +368,7 @@ function drawAdsbs(data) {
 	var altWarn = false;
 	if (currentHeartBeat != null) {
 		if (currentHeartBeat.baroAlt && baro) {
-			if (Math.abs(currentHeartBeat.baroAlt - baro) < 200) {
+			if (Math.abs(currentHeartBeat.baroAlt - baro) < 200 && baro != 0) {
 				altWarn = true;
 			}
 		}
