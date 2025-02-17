@@ -368,7 +368,7 @@ function drawAdsbs(data) {
 	var altWarn = false;
 	if (currentHeartBeat != null) {
 		if (currentHeartBeat.baroAlt && baro) {
-			if (Math.abs(currentHeartBeat.baroAlt - baro) < 200 && baro != 0) {
+			if (Math.abs(currentHeartBeat.baroAlt - baro) < 200 && baro > 0) {
 				altWarn = true;
 			}
 		}
@@ -385,7 +385,7 @@ function drawAdsbs(data) {
                         icon : {
                                 path : heading ? google.maps.SymbolPath.FORWARD_CLOSED_ARROW : google.maps.SymbolPath.CIRCLE,
                                 scale : 5,
-                                strokeColor : !altWarn ? "green" : (baro == 0 ? "gray" : "orange"),
+                                strokeColor : baro == 0 ? "gray" : (altWarn ? "orange" : "green"),
                                 rotation : heading
                         },
                         click : function(e) {
@@ -407,7 +407,7 @@ function drawAdsbs(data) {
                 marker.setIcon({
                         path : heading ? google.maps.SymbolPath.FORWARD_CLOSED_ARROW : google.maps.SymbolPath.CIRCLE,
                         scale : 5,
-			strokeColor : !altWarn ? "green" : (baro == 0 ? "gray" : "orange"),
+			strokeColor : baro == 0 ? "gray" : (altWarn ? "orange" : "green"),
                         rotation : heading
                 });
 		marker.click = function(e) {
