@@ -385,7 +385,7 @@ function drawAdsbs(data) {
                         icon : {
                                 path : heading ? google.maps.SymbolPath.FORWARD_CLOSED_ARROW : google.maps.SymbolPath.CIRCLE,
                                 scale : 5,
-                                strokeColor : alt > 200 ? "green" : (baro == 0 ? "gray" : "orange"),
+                                strokeColor : !altWarn ? "green" : (baro == 0 ? "gray" : "orange"),
                                 rotation : heading
                         },
                         click : function(e) {
@@ -407,7 +407,7 @@ function drawAdsbs(data) {
                 marker.setIcon({
                         path : heading ? google.maps.SymbolPath.FORWARD_CLOSED_ARROW : google.maps.SymbolPath.CIRCLE,
                         scale : 5,
-			strokeColor : alt > 200 ? "green" : (baro == 0 ? "gray" : "orange"),
+			strokeColor : !altWarn ? "green" : (baro == 0 ? "gray" : "orange"),
                         rotation : heading
                 });
 		marker.click = function(e) {
