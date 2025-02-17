@@ -370,7 +370,7 @@ function drawAdsbs(data) {
 		marker = mainMap.addMarker({
                         lat : data.adsb.lat,
                         lng : data.adsb.lon,
-                        title : "FLIGHT: " + flight + "\nTYPE: " + type + "\nALT: " + alt + "\nSPEED: " + speed,
+                        title : "FLIGHT: " + flight + "\nTYPE: " + type + "\nBARO ALT: " + alt + "\nSPEED: " + speed,
                         label : flight + " / " + alt,
                         icon : {
                                 path : heading ? google.maps.SymbolPath.FORWARD_CLOSED_ARROW : google.maps.SymbolPath.CIRCLE,
@@ -380,7 +380,7 @@ function drawAdsbs(data) {
                         },
                         click : function(e) {
 				//static data for now
-                                //alert("FLIGHT: " + flight + "\nTYPE: " + type + "\nALT: " + alt + "\nSPEED: " + speed);
+                                //alert("FLIGHT: " + flight + "\nTYPE: " + type + "\nBARO ALT: " + alt + "\nSPEED: " + speed);
 				alert(marker.title);
                         }
                 });
@@ -392,7 +392,7 @@ function drawAdsbs(data) {
                         lat : data.adsb.lat,
                         lng : data.adsb.lon
                 });
-		marker.setTitle("FLIGHT: " + flight + "\nTYPE: " + type + "\nALT: " + alt + "\nSPEED: " + speed);
+		marker.setTitle("FLIGHT: " + flight + "\nTYPE: " + type + "\nBARO ALT: " + alt + "\nSPEED: " + speed);
 		marker.setLabel(flight + " / " + alt);
                 marker.setIcon({
                         path : heading ? google.maps.SymbolPath.FORWARD_CLOSED_ARROW : google.maps.SymbolPath.CIRCLE,
@@ -401,7 +401,7 @@ function drawAdsbs(data) {
                         rotation : heading
                 });
 		marker.click = function(e) {
-				//alert("FLIGHT: " + flight + "\nTYPE: " + type + "\nALT: " + alt + "\nSPEED: " + speed);
+				//alert("FLIGHT: " + flight + "\nTYPE: " + type + "\nBARO ALT: " + alt + "\nSPEED: " + speed);
 				alert(marker.title);
 			};
         }
