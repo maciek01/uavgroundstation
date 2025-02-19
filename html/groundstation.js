@@ -15,6 +15,7 @@ var currentHeartBeat = null;
 var markers = [];
 
 var adsbMarkers = [];
+var adsbWindows = [];
 
 //var homeMarker = null;
 var homeMarkers = [];
@@ -323,7 +324,9 @@ function drawAllAdsbs(data) {
 				mainMap.removeMarkers(adsbMarkers[key]);
 				adsbMarkers[key].setMap(null);
 				adsbMarkers[key] = null;
+				adsbWindows[key] = null;
 				delete adsbMarkers[key];
+				delete adsbWindows[key];
 
 				console.log("Removed ADSB " + key);
 			}
@@ -353,29 +356,48 @@ function drawAdsbs(data) {
 
 	var heading = data.adsb.track ? data.adsb.track : data.adsb.true_heading;
 	var flight = data.adsb.flight ? data.adsb.flight : "--";
-	var baro = data.adsb.alt_baro ? data.adsb.alt_baro : "";
-	if ("ground" === baro) {
-		baro = 0;
-	}
-	baro = Math.floor(baro * 0.3048);
+	var baro = data.adsb.alt_baro;
 	var galt = data.adsb.alt_geom ? Math.floor(data.adsb.alt_geom * 0.3048) : "--";
 	var speed = data.adsb.gs ? data.adsb.gs : "--";
 	var type = data.adsb.t ? data.adsb.t : "--";
 
-	var alt = baro;
+	var onground = false;
+	var baroalt = 0;
+	if ("ground" === baro || !baro) {
+		baroalt = "--";
+		onground = true;
+	} else {
+		baroalt = Math.floor(baro * 0.3048);
+	}
+
 
 	//are we at least 200m apart?
 	var altWarn = false;
 	if (currentHeartBeat != null) {
-		if (currentHeartBeat.baroAlt && baro) {
-			if (Math.abs(currentHeartBeat.baroAlt - baro) < 200 && baro > 0) {
+		if (currentHeartBeat.baroAlt && !onground) {
+			if (currentHeartBeat.baroAlt + 200 > baroalt) {
 				altWarn = true;
 			}
 		}
 	}
 
+	var alt = baroalt;
+
+	var flightHTML = 
+		 "<BR />TYPE: <a href='https://skybrary.aero/aircraft/"+ type + "' target='_blank'>" + type + "</a>"
+		 + "<BR />BARO ALT: " + alt
+		 + "<BR />SPEED: " + speed;
+
+
 	//draw adsb
 	if (marker == null) {
+
+		const infoWindow = new google.maps.InfoWindow({
+			//ariaLabel: "FLIGHT: " + flight,
+			headerContent: "FLIGHT: " + flight + "",
+			content: flightHTML,
+			disableAutoPan: true,
+		});
 
 		marker = mainMap.addMarker({
                         lat : data.adsb.lat,
@@ -385,19 +407,27 @@ function drawAdsbs(data) {
                         icon : {
                                 path : heading ? google.maps.SymbolPath.FORWARD_CLOSED_ARROW : google.maps.SymbolPath.CIRCLE,
                                 scale : 5,
-                                strokeColor : baro == 0 ? "gray" : (altWarn ? "orange" : "green"),
+                                strokeColor : onground ? "gray" : (altWarn ? "orange" : "green"),
                                 rotation : heading
                         },
                         click : function(e) {
-				//static data for now
-                                //alert("FLIGHT: " + flight + "\nTYPE: " + type + "\nBARO ALT: " + alt + "\nSPEED: " + speed);
-				alert(marker.title);
+
+				infoWindow.setContent(flightHTML);
+				infoWindow.open(map, marker);
+
+				//infowindow.open({
+					//anchor: marker,
+					//map,
+					//shouldFocus: false,
+				//});
                         }
                 });
 
                 adsbMarkers[data.adsb.hex] = marker;
+		adsbWindows[data.adsb.hex] = infoWindow;
 
         } else {
+		adsbWindows[data.adsb.hex].setContent(flightHTML);
                 marker.setPosition({
                         lat : data.adsb.lat,
                         lng : data.adsb.lon
@@ -407,13 +437,12 @@ function drawAdsbs(data) {
                 marker.setIcon({
                         path : heading ? google.maps.SymbolPath.FORWARD_CLOSED_ARROW : google.maps.SymbolPath.CIRCLE,
                         scale : 5,
-			strokeColor : baro == 0 ? "gray" : (altWarn ? "orange" : "green"),
+			strokeColor : onground ? "gray" : (altWarn ? "orange" : "green"),
                         rotation : heading
                 });
-		marker.click = function(e) {
-				//alert("FLIGHT: " + flight + "\nTYPE: " + type + "\nBARO ALT: " + alt + "\nSPEED: " + speed);
-				alert(marker.title);
-			};
+		//marker.click = function(e) {
+				//alert(marker.title);
+			//};
         }
 
 
