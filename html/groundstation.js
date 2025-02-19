@@ -322,10 +322,13 @@ function drawAllAdsbs(data) {
 			//remove markers which didnt get fresh state
 			if (!list.includes(key)) {
 				mainMap.removeMarkers(adsbMarkers[key]);
+
 				adsbMarkers[key].setMap(null);
 				adsbMarkers[key] = null;
-				adsbWindows[key] = null;
 				delete adsbMarkers[key];
+
+				adsbWindows[key].close();
+				adsbWindows[key] = null;
 				delete adsbWindows[key];
 
 				console.log("Removed ADSB " + key);
