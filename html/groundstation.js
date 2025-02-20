@@ -388,7 +388,8 @@ function drawAdsbs(data) {
 	var alt = baroalt;
 
 	var flightHTML = 
-		 "<BR />FLIGHT: <a href='https://www.flightaware.com/live/flight/" + flight + "' target='_blank'>" + flight + "</a>"
+		   "<BR />FlightAware: <a href='https://www.flightaware.com/live/flight/" + flight + "' target='_blank'>" + flight + "</a>"
+		 + "<BR />APL: <a href='https://globe.airplanes.live/?icao=" + data.adsb.hex + "' target='_blank'>" + flight + "</a>"
 		 + "<BR />REG: <a href='https://registry.faa.gov/AircraftInquiry/Search/NNumberResult?nNumberTxt="+ reg + "' target='_blank'>" + reg + "</a>"
 		 + "<BR />TYPE: <a href='https://skybrary.aero/aircraft/"+ type + "' target='_blank'>" + type + "</a>"
 		 + "<BR />BARO ALT: " + alt
@@ -400,7 +401,7 @@ function drawAdsbs(data) {
 
 		const infoWindow = new google.maps.InfoWindow({
 			//ariaLabel: "FLIGHT: " + flight,
-			headerContent: "" + flight + "",
+			headerContent: "FLIGHT: " + flight + "",
 			content: flightHTML,
 			disableAutoPan: true,
 		});
