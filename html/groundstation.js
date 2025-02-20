@@ -363,6 +363,7 @@ function drawAdsbs(data) {
 	var galt = data.adsb.alt_geom ? Math.floor(data.adsb.alt_geom * 0.3048) : "--";
 	var speed = data.adsb.gs ? data.adsb.gs : "--";
 	var type = data.adsb.t ? data.adsb.t : "--";
+	var reg = data.adsb.r ? data.adsb.r : "--";
 
 	var onground = false;
 	var baroalt = 0;
@@ -387,7 +388,9 @@ function drawAdsbs(data) {
 	var alt = baroalt;
 
 	var flightHTML = 
-		 "<BR />TYPE: <a href='https://skybrary.aero/aircraft/"+ type + "' target='_blank'>" + type + "</a>"
+		 "<BR />FLIGHT: <a href='https://www.flightaware.com/live/flight/" + flight + "' target='_blank'>" + flight + "</a>"
+		 + "<BR />REG: <a href='https://registry.faa.gov/AircraftInquiry/Search/NNumberResult?nNumberTxt="+ reg + "' target='_blank'>" + reg + "</a>"
+		 + "<BR />TYPE: <a href='https://skybrary.aero/aircraft/"+ type + "' target='_blank'>" + type + "</a>"
 		 + "<BR />BARO ALT: " + alt
 		 + "<BR />SPEED: " + speed;
 
@@ -397,7 +400,7 @@ function drawAdsbs(data) {
 
 		const infoWindow = new google.maps.InfoWindow({
 			//ariaLabel: "FLIGHT: " + flight,
-			headerContent: "FLIGHT: " + flight + "",
+			headerContent: "" + flight + "",
 			content: flightHTML,
 			disableAutoPan: true,
 		});
