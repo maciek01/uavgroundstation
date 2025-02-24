@@ -366,8 +366,10 @@ function drawAdsbs(data) {
 	var reg = data.adsb.r ? data.adsb.r : "--";
 
 	var onground = false;
-	var baroalt = 0;
-	if ("ground" === baro || !baro) {
+	var baroalt;
+	if (!baro) {
+		baroalt = 0;
+	} else if ("ground" === baro) {
 		baroalt = "--";
 		onground = true;
 	} else {
