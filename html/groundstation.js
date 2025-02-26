@@ -394,8 +394,8 @@ function drawAdsbs(data) {
 		 + "<BR />APL: <a href='https://globe.airplanes.live/?icao=" + data.adsb.hex + "' target='_blank'>" + flight + "</a>"
 		 + "<BR />REG: <a href='https://registry.faa.gov/AircraftInquiry/Search/NNumberResult?nNumberTxt="+ reg + "' target='_blank'>" + reg + "</a>"
 		 + "<BR />TYPE: <a href='https://skybrary.aero/aircraft/"+ type + "' target='_blank'>" + type + "</a>"
-		 + "<BR />BARO ALT: " + alt
-		 + "<BR />SPEED: " + speed;
+		 + "<BR />BARO ALT: " + alt + " m"
+		 + "<BR />SPEED: " + speed + " kts";
 
 
 	//draw adsb
@@ -411,7 +411,7 @@ function drawAdsbs(data) {
 		marker = mainMap.addMarker({
                         lat : data.adsb.lat,
                         lng : data.adsb.lon,
-                        title : "FLIGHT: " + flight + "\nTYPE: " + type + "\nBARO ALT: " + alt + "\nSPEED: " + speed,
+                        title : "FLIGHT: " + flight + "\nTYPE: " + type + "\nBARO ALT: " + alt + " m\nSPEED: " + speed + " kts",
                         label : flight + " / " + alt,
                         icon : {
                                 path : heading ? google.maps.SymbolPath.FORWARD_CLOSED_ARROW : google.maps.SymbolPath.CIRCLE,
@@ -441,7 +441,7 @@ function drawAdsbs(data) {
                         lat : data.adsb.lat,
                         lng : data.adsb.lon
                 });
-		marker.setTitle("FLIGHT: " + flight + "\nTYPE: " + type + "\nBARO ALT: " + alt + "\nSPEED: " + speed);
+		marker.setTitle("FLIGHT: " + flight + "\nTYPE: " + type + "\nBARO ALT: " + alt + " m\nSPEED: " + speed + " kts");
 		marker.setLabel(flight + " / " + alt);
                 marker.setIcon({
                         path : heading ? google.maps.SymbolPath.FORWARD_CLOSED_ARROW : google.maps.SymbolPath.CIRCLE,
