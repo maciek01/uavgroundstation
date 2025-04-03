@@ -587,6 +587,9 @@ function updateInfo(data) {
 		$("#modemsignal").html(data.heartbeat.modemsignal);
 		$("#message").html(data.heartbeat.message ? data.heartbeat.message + " / " + data.heartbeat.messageSev : "--");
 
+		$("#loiter").html(data.heartbeat.type && data.heartbeat.type === "vtol" ? "QLOITER" : "LOITER");
+		$("#land").html(data.heartbeat.type && data.heartbeat.type === "vtol" ? "QLAND" : "LAND");
+
 		//toggle video
 		if (current_videostat !== data.heartbeat.videostat) {
 			current_videostat = data.heartbeat.videostat;
